@@ -60,6 +60,8 @@ cloud:
       auto: false
     s3:
       bucket: ${S3_MEDIA_BUCKET}
+    cloudfront:
+      domain: ${CLOUDFRONT_DOMAIN}
 
 # JWT
 jwt:
@@ -105,9 +107,3 @@ logging:
     cloneproject.instagram: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n"
-
-# CloudFront
-cloud:
-  aws:
-    cloudfront:
-      domain: ${CLOUDFRONT_DOMAIN}
