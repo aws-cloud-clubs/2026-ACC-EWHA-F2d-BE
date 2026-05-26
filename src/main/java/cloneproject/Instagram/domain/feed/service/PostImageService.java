@@ -51,16 +51,6 @@ public class PostImageService {
 		postTagService.saveAll(tags);
 	}
 
-		postImageRepository.savePostImages(images, post.getId(), altTexts);
-		for (int i = 0; i < images.size(); i++) {
-			post.getPostImages().add(new PostImage(post, images.get(i), altTexts.get(i)));
-		}
-
-		if (!tags.isEmpty()) {
-			linkWithTags(tags, post);
-		}
-		postTagService.saveAll(tags);
-	}
 
 	private void linkWithTags(List<PostImageTagRequest> postImageTags, Post post) {
 		final List<Long> postImageIds = postImageRepository.findAllByPost(post).stream()
