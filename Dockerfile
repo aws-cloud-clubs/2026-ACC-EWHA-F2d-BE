@@ -7,11 +7,11 @@ COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
-RUN chmod +x gradlew && ./gradlew dependencies --no-daemon -q
+RUN chmod +x gradlew && ./gradlew dependencies --no-daemon
 
 # 소스 복사 및 빌드 (테스트 스킵 - CI에서 별도 실행)
 COPY src src
-RUN ./gradlew bootJar --no-daemon -x test -q
+RUN ./gradlew bootJar --no-daemon -x test
 
 # ── Stage 2: Run ────────────────────────────────────────────────
 FROM --platform=linux/amd64 eclipse-temurin:11-jre-alpine
