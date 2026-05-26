@@ -478,7 +478,7 @@ ex) Resolves: #1, #2
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### ERD
-![erd](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/03a0a9cc-ea02-4681-b502-8102e715e7d8/Instagram.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220401%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220401T184204Z&X-Amz-Expires=86400&X-Amz-Signature=92c923762b4e09be480651f7762f1411cd4e1630a2ae528ef9e4d80b04913f47&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Instagram.png%22&x-id=GetObject)
+<!-- ERD 이미지 (원본 링크 만료) -->
 <p align="center"><a href="https://www.erdcloud.com/d/ufv5P5mkEhpe2iStd"><img src="https://img.shields.io/badge/ERD Cloud-946CEE?style=for-the-badge"/></a></p>
 <!-- CONTRIBUTING -->
 
