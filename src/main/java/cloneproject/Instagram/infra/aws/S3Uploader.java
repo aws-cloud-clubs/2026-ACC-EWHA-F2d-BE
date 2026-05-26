@@ -1,15 +1,18 @@
 package cloneproject.Instagram.infra.aws;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +74,27 @@ public class S3Uploader {
                 .imageType(ImageType.valueOf(extension))
                 .imageUrl(cloudfrontUrl)
                 .build();
+    }
+
+    // MultipartFile 직접 업로드 (기존 방식 호환용)
+    public Image uploadImage(MultipartFile file, String dirName) {
+        try {
+            String originalFilename = file.getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();
+            String extension = extractExtension(originalFilename);
+            String baseName = extractBaseName(originalFilename);
+            String s3Key = dirName + "/" + uuid + "_" + baseName + "." + extension;
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            metadata.setContentType(file.getContentType());
+
+            amazonS3Client.putObject(bucket, s3Key, file.getInputStream(), metadata);
+
+            return buildImage(s3Key);
+        } catch (IOException e) {
+            throw new RuntimeException("S3 업로드 실패", e);
+        }
     }
 
     // S3 객체 삭제
