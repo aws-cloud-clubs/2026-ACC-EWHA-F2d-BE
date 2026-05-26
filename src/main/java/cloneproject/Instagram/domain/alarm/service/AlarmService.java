@@ -1,5 +1,8 @@
 package cloneproject.Instagram.domain.alarm.service;
 
+// import 추가함
+import cloneproject.Instagram.infra.aws.EventBridgeService;
+
 import static cloneproject.Instagram.domain.alarm.dto.AlarmType.*;
 
 import java.time.LocalDateTime;
@@ -45,6 +48,9 @@ public class AlarmService {
 	private final StringExtractUtil stringExtractUtil;
 	private final MemberStoryRedisRepository memberStoryRedisRepository;
 	private final AuthUtil authUtil;
+	// 추가함
+	private final EventBridgeService eventBridgeService;
+
 
 	public Page<AlarmDto> getAlarms(int page, int size) {
 		final Member loginMember = authUtil.getLoginMember();
@@ -68,35 +74,36 @@ public class AlarmService {
 		return new PageImpl<>(content, pageable, alarmPage.getTotalElements());
 	}
 
+	// 수정함
 	@Transactional
 	public void alert(Member target, Follow follow) {
-		final Member loginMember = authUtil.getLoginMember();
-		final Alarm alarm = Alarm.builder()
-			.type(FOLLOW)
-			.agent(loginMember)
-			.target(target)
-			.follow(follow)
-			.build();
+    final Member loginMember = authUtil.getLoginMember();
+    final Alarm alarm = Alarm.builder()
+        .type(FOLLOW)
+        .agent(loginMember)
+        .target(target)
+        .follow(follow)
+        .build();
+    alarmRepository.save(alarm);
+    eventBridgeService.publishUserFollowed(loginMember.getId(), target.getId());
+}
 
-		alarmRepository.save(alarm);
-	}
-
+	//수정함
 	@Transactional
 	public void alert(AlarmType type, Member target, Post post) {
-		if (!type.equals(LIKE_POST)) {
-			throw new MismatchedAlarmTypeException();
-		}
-
-		final Member loginMember = authUtil.getLoginMember();
-		final Alarm alarm = Alarm.builder()
-			.type(type)
-			.agent(loginMember)
-			.target(target)
-			.post(post)
-			.build();
-
-		alarmRepository.save(alarm);
-	}
+    if (!type.equals(LIKE_POST)) {
+        throw new MismatchedAlarmTypeException();
+    }
+    final Member loginMember = authUtil.getLoginMember();
+    final Alarm alarm = Alarm.builder()
+        .type(type)
+        .agent(loginMember)
+        .target(target)
+        .post(post)
+        .build();
+    alarmRepository.save(alarm);
+    eventBridgeService.publishPostLiked(post.getId(), loginMember.getId(), target.getId());
+}
 
 	@Transactional
 	public void alertBatch(AlarmType type, List<Member> targets, Post post) {
@@ -118,23 +125,26 @@ public class AlarmService {
 		alarmRepository.saveMentionCommentAlarms(loginMember, targets, post, comment, LocalDateTime.now());
 	}
 
+	// 수정함
 	@Transactional
 	public void alert(AlarmType type, Member target, Post post, Comment comment) {
-		if (!type.equals(COMMENT) && !type.equals(LIKE_COMMENT) && !type.equals(MENTION_COMMENT)) {
-			throw new MismatchedAlarmTypeException();
-		}
-
-		final Member loginMember = authUtil.getLoginMember();
-		final Alarm alarm = Alarm.builder()
-			.type(type)
-			.agent(loginMember)
-			.target(target)
-			.post(post)
-			.comment(comment)
-			.build();
-
-		alarmRepository.save(alarm);
-	}
+    if (!type.equals(COMMENT) && !type.equals(LIKE_COMMENT) && !type.equals(MENTION_COMMENT)) {
+        throw new MismatchedAlarmTypeException();
+    }
+    final Member loginMember = authUtil.getLoginMember();
+    final Alarm alarm = Alarm.builder()
+        .type(type)
+        .agent(loginMember)
+        .target(target)
+        .post(post)
+        .comment(comment)
+        .build();
+    alarmRepository.save(alarm);
+    if (type.equals(COMMENT)) {
+        eventBridgeService.publishCommentCreated(
+            post.getId(), comment.getId(), loginMember.getId(), target.getId());
+    }
+}
 
 	@Transactional
 	public void delete(AlarmType type, Member target, Post post) {
