@@ -114,6 +114,10 @@ public enum ResultCode {
 	GET_HASHTAG_AUTO_COMPLETE_SUCCESS(200, "SE008", "해시태그 자동완성 조회에 성공하였습니다."),
 	GET_RECOMMEND_MEMBER_SUCCESS(200, "SE009", "팔로잉 추천 멤버 조회에 성공하였습니다.");
 
+	// 추가
+	// 프리사인URL 발급 성공
+	GET_PRESIGNED_URL_SUCCESS(200, "U001", "프리사인 URL 발급에 성공하였습니다.");
+
 	private final int status;
 	private final String code;
 	private final String message;

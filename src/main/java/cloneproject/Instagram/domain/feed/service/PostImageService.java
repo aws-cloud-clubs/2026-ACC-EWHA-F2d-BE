@@ -34,11 +34,22 @@ public class PostImageService {
 	}
 
 	@Transactional
-	public void saveAll(Post post, List<MultipartFile> multipartFiles, List<String> altTexts,
+	public void saveAll(Post post, List<String> s3Keys, List<String> altTexts,
 		List<PostImageTagRequest> tags) {
-		final List<Image> images = multipartFiles.stream()
-			.map(pi -> uploader.uploadImage(pi, "post"))
+		final List<Image> images = s3Keys.stream()
+			.map(uploader::buildImage)  // S3 키 → CloudFront URL 포함 Image VO
 			.collect(Collectors.toList());
+
+		postImageRepository.savePostImages(images, post.getId(), altTexts);
+		for (int i = 0; i < images.size(); i++) {
+			post.getPostImages().add(new PostImage(post, images.get(i), altTexts.get(i)));
+		}
+
+		if (!tags.isEmpty()) {
+			linkWithTags(tags, post);
+		}
+		postTagService.saveAll(tags);
+	}
 
 		postImageRepository.savePostImages(images, post.getId(), altTexts);
 		for (int i = 0; i < images.size(); i++) {
