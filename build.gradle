@@ -52,7 +52,8 @@ dependencies {
 	testImplementation 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	# 추가
+	
+	// 추가
 	implementation 'software.amazon.awssdk:eventbridge:2.20.0'
 }
 
