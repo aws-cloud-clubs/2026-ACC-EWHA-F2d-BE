@@ -10,7 +10,7 @@ env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: instagram-clone-backend
   ECS_CLUSTER: instagram-cluster
-  ECS_SERVICE: instagram-task-service
+  ECS_SERVICE: instagram-task-service2
   CONTAINER_NAME: instagram-app
 
 jobs:
