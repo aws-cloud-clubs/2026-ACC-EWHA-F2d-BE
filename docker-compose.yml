@@ -1,0 +1,60 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: instagram-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: instagram
+      MYSQL_USER: instagram
+      MYSQL_PASSWORD: instagram1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: instagram-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  app:
+    image: instagram-clone-backend
+    container_name: instagram-app
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: mysql
+      DB_NAME: instagram
+      DB_USERNAME: instagram
+      DB_PASSWORD: instagram1234
+      REDIS_HOST: redis
+      JWT_KEY: "local-dev-jwt-secret-key-must-be-at-least-64-bytes-long-for-hs512-ok"
+      SES_USERNAME: dummy
+      SES_PASSWORD: dummy
+      AWS_ACCESS_KEY: dummy
+      AWS_SECRET_KEY: dummy
+      S3_MEDIA_BUCKET: dummy
+      SERVER_DOMAIN: localhost
+      KAKAO_REST_KEY: dummy
+      OAUTH_GOOGLE_CLIENT_ID: dummy
+      OAUTH_GOOGLE_CLIENT_SECRET: dummy
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  mysql-data:

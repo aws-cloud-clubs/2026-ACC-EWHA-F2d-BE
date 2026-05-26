@@ -60,7 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String[] AUTH_WHITELIST = {"/login", "/login/recovery", "/accounts", "/**/without",
 		"/accounts/password/email",
 		"/accounts/password/reset", "/reissue", "/swagger-ui.html", "/swagger/**", "/swagger-resources/**",
-		"swagger-ui/**", "/accounts/email", "/accounts/check", "/logout/only/cookie", "/ws-connection/**"};
+		"swagger-ui/**", "/accounts/email", "/accounts/check", "/logout/only/cookie", "/ws-connection/**",
+		"/actuator/health"};
 	private final JwtUtil jwtUtil;
 	private final ResetPasswordCodeUserDetailsService resetPasswordCodeUserDetailsService;
 	private final CustomUserDetailsService jwtUserDetailsService;

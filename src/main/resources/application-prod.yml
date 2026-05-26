@@ -1,0 +1,107 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
+
+  redis:
+    host: ${REDIS_HOST}
+    port: 6379
+
+  mail:
+    host: email-smtp.ap-northeast-2.amazonaws.com
+    port: 587
+    username: ${SES_USERNAME}
+    password: ${SES_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET}
+            scope: profile, email
+
+# AWS
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    s3:
+      bucket: ${S3_MEDIA_BUCKET}
+
+# JWT
+jwt:
+  key: ${JWT_KEY}
+
+access-token-expires: 1800000    # 30분 (ms)
+refresh-token-expires: 604800000  # 7일 (ms)
+
+# 서버 도메인 (OAuth redirect URI, 쿠키 도메인에 사용)
+server-domain: ${SERVER_DOMAIN}
+
+# 최대 동시 로그인 기기 수
+max-login-device: 5
+
+# 비동기 스레드풀 (Fargate 0.5vCPU 기준)
+async:
+  core-pool-size: 2
+  max-pool-size: 5
+  queue-capacity: 100
+
+# 카카오 지도 (위치 정보)
+kakao:
+  rest:
+    key: ${KAKAO_REST_KEY}
+
+# Actuator (ALB 헬스체크 전용)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+  health:
+    mail:
+      enabled: false
+
+# 로깅
+logging:
+  level:
+    root: WARN
+    cloneproject.instagram: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n"

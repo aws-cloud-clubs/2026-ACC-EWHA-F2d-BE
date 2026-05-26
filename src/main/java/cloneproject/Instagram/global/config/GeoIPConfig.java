@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -14,6 +15,7 @@ import com.maxmind.geoip2.DatabaseReader;
 public class GeoIPConfig {
 
 	@Bean
+	@ConditionalOnResource(resources = "classpath:GeoLite2-City.mmdb")
 	public DatabaseReader databaseReader() throws Exception {
 		ClassPathResource classPathResource = new ClassPathResource("GeoLite2-City.mmdb");
 		InputStream inputStream = classPathResource.getInputStream();
