@@ -29,7 +29,7 @@ public class RedisConfig {
 		LettuceClientConfiguration.LettuceClientConfigurationBuilder builder =
 			LettuceClientConfiguration.builder();
 		if (ssl) {
-			builder.useSsl();
+			builder.useSsl().disablePeerVerification();
 		}
 		return new LettuceConnectionFactory(redisConfig, builder.build());
 	}
