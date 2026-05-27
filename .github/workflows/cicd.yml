@@ -1,5 +1,4 @@
-# CICD TEST
-name: Deploy to ECS
+name: Deploy to ECS v2
 
 on:
   push:
