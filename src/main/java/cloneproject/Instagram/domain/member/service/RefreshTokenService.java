@@ -42,7 +42,9 @@ public class RefreshTokenService {
 
 	@Transactional(readOnly = true)
 	public Optional<RefreshToken> findRefreshToken(Long memberId, String value) {
-		return refreshTokenRedisRepository.findByMemberIdAndValue(memberId, value);
+		return refreshTokenRedisRepository.findAllByMemberId(memberId).stream()
+			.filter(t -> t.getValue().equals(value))
+			.findFirst();
 	}
 
 	@Transactional
@@ -52,14 +54,18 @@ public class RefreshTokenService {
 
 	@Transactional
 	public void deleteRefreshTokenByValue(Long memberId, String value) {
-		final RefreshToken refreshToken = refreshTokenRedisRepository.findByMemberIdAndValue(memberId, value)
+		final RefreshToken refreshToken = refreshTokenRedisRepository.findAllByMemberId(memberId).stream()
+			.filter(t -> t.getValue().equals(value))
+			.findFirst()
 			.orElseThrow(JwtInvalidException::new);
 		refreshTokenRedisRepository.delete(refreshToken);
 	}
 
 	@Transactional
 	public void deleteRefreshTokenByMemberIdAndId(Long memberId, String id) {
-		final RefreshToken refreshToken = refreshTokenRedisRepository.findByMemberIdAndId(memberId, id)
+		final RefreshToken refreshToken = refreshTokenRedisRepository.findAllByMemberId(memberId).stream()
+			.filter(t -> t.getId().equals(id))
+			.findFirst()
 			.orElseThrow(JwtInvalidException::new);
 		refreshTokenRedisRepository.delete(refreshToken);
 	}
