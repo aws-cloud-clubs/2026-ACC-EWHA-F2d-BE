@@ -34,10 +34,10 @@ public class PostImageService {
 	}
 
 	@Transactional
-	public void saveAll(Post post, List<String> s3Keys, List<String> altTexts,
+	public void saveAll(Post post, List<MultipartFile> files, List<String> altTexts,
 		List<PostImageTagRequest> tags) {
-		final List<Image> images = s3Keys.stream()
-			.map(uploader::buildImage)  // S3 키 → CloudFront URL 포함 Image VO
+		final List<Image> images = files.stream()
+			.map(file -> uploader.uploadImage(file, "post"))
 			.collect(Collectors.toList());
 
 		postImageRepository.savePostImages(images, post.getId(), altTexts);

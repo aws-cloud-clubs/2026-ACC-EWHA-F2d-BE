@@ -28,7 +28,7 @@ public class PostUploadRequest {
 
 	@ApiModelProperty(value = "게시물 이미지", required = true)
 	@Size(min = 1, max = 10, message = "게시물 이미지는 1개 이상, 10개 이하만 추가할 수 있습니다.")
-	private List<String> postImages = new ArrayList<>(); // S3 키 목록
+	private List<MultipartFile> postImages = new ArrayList<>();
 
 	@ApiModelProperty(value = "게시물 이미지 대체 텍스트", required = true, example = "image")
 	@Size(min = 1, message = "게시물 이미지 대체 텍스트는 필수입니다.")
