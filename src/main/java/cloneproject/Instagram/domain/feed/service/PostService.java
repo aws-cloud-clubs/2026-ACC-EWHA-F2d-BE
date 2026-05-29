@@ -88,7 +88,7 @@ public class PostService {
 
 	@Transactional
 	public PostUploadResponse upload(PostUploadRequest request) {
-		final List<String> postImages = request.getPostImages();
+		final List<MultipartFile> postImages = request.getPostImages();
 		final List<String> altTexts = request.getAltTexts();
 		final List<PostImageTagRequest> postImageTags = request.getPostImageTags();
 		validateParameters(postImages.size(), altTexts.size(), postImageTags);
