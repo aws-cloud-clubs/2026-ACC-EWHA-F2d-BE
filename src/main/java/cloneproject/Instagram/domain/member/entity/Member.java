@@ -95,7 +95,7 @@ public class Member {
 		this.image = Image.builder()
 			.imageName("base")
 			.imageType(ImageType.PNG)
-			.imageUrl("https://instagram-s3-dev.s3.ap-northeast-2.amazonaws.com/member/base-UUID_base.PNG.png")
+			.imageUrl("https://d3fz25ga8wiwzf.cloudfront.net/member/base-UUID_base.PNG.png")
 			.imageUUID("base-UUID")
 			.build();
 	}
@@ -144,7 +144,7 @@ public class Member {
 		this.image = Image.builder()
 			.imageName("base")
 			.imageType(ImageType.PNG)
-			.imageUrl("https://instagram-s3-dev.s3.ap-northeast-2.amazonaws.com/member/base-UUID_base.PNG.png")
+			.imageUrl("https://d3fz25ga8wiwzf.cloudfront.net/member/base-UUID_base.PNG.png")
 			.imageUUID("base-UUID")
 			.build();
 	}
