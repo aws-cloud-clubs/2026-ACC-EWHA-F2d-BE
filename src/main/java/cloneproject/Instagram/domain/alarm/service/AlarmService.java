@@ -85,7 +85,7 @@ public class AlarmService {
         .follow(follow)
         .build();
     alarmRepository.save(alarm);
-    eventBridgeService.publishUserFollowed(loginMember.getId(), target.getId());
+    eventBridgeService.publishUserFollowed(loginMember.getId(), loginMember.getUsername(), target.getId());
 }
 
 	//수정함
@@ -102,7 +102,7 @@ public class AlarmService {
         .post(post)
         .build();
     alarmRepository.save(alarm);
-    eventBridgeService.publishPostLiked(post.getId(), loginMember.getId(), target.getId());
+    eventBridgeService.publishPostLiked(post.getId(), loginMember.getId(), loginMember.getUsername(), target.getId());
 }
 
 	@Transactional
@@ -142,7 +142,7 @@ public class AlarmService {
     alarmRepository.save(alarm);
     if (type.equals(COMMENT)) {
         eventBridgeService.publishCommentCreated(
-            post.getId(), comment.getId(), loginMember.getId(), target.getId());
+            post.getId(), comment.getId(), loginMember.getId(), loginMember.getUsername(), target.getId());
     }
 }
 

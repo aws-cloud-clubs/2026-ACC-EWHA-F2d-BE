@@ -71,6 +71,7 @@ import cloneproject.Instagram.global.error.ErrorResponse;
 import cloneproject.Instagram.global.error.exception.InvalidInputException;
 import cloneproject.Instagram.global.util.AuthUtil;
 import cloneproject.Instagram.global.vo.Image;
+import cloneproject.Instagram.infra.aws.EventBridgeService;
 import cloneproject.Instagram.infra.aws.S3Uploader;
 
 @Service
@@ -92,6 +93,7 @@ public class ChatService {
 	private final MessagePostRepository messagePostRepository;
 	private final S3Uploader uploader;
 	private final AuthUtil authUtil;
+	private final EventBridgeService eventBridgeService;
 
 	@Transactional
 	public ChatRoomCreateResponse createRoom(List<String> usernames) {
@@ -204,6 +206,11 @@ public class ChatService {
 
 		final MessageResponse response = new MessageResponse(MessageAction.MESSAGE_GET, new MessageDto(message));
 		roomMembers.forEach(r -> messagingTemplate.convertAndSend("/sub/" + r.getMember().getUsername(), response));
+
+		// EventBridge DM 알림 발행
+		roomMembers.stream()
+			.filter(r -> !r.getMember().getId().equals(sender.getId()))
+			.forEach(r -> eventBridgeService.publishDmSent(sender.getId(), sender.getUsername(), r.getMember().getId());
 	}
 
 	public void indicate(IndicateRequest request) {
@@ -261,6 +268,11 @@ public class ChatService {
 
 		final MessageResponse response = new MessageResponse(MessageAction.MESSAGE_GET, new MessageDto(message));
 		roomMembers.forEach(r -> messagingTemplate.convertAndSend("/sub/" + r.getMember().getUsername(), response));
+
+		// EventBridge DM 알림 발행 (이미지)
+		roomMembers.stream()
+			.filter(r -> !r.getMember().getId().equals(loginMember.getId()))
+			.forEach(r -> eventBridgeService.publishDmSent(loginMember.getId(), r.getMember().getId()));
 
 		return new StatusResponse(true);
 	}

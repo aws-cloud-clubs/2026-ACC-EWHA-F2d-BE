@@ -29,26 +29,37 @@ public class EventBridgeService {
         this.objectMapper = objectMapper;
     }
 
-    public void publishPostLiked(Long postId, Long memberId, Long targetMemberId) {
+    public void publishPostLiked(Long postId, Long memberId, String memberUsername, Long targetMemberId) {
         publish("post.liked", Map.of(
                 "postId", postId,
                 "memberId", memberId,
+                "likerUsername", memberUsername,
                 "targetMemberId", targetMemberId
         ));
     }
 
-    public void publishUserFollowed(Long memberId, Long followMemberId) {
+    public void publishUserFollowed(Long memberId, String memberUsername, Long followMemberId) {
         publish("user.followed", Map.of(
                 "memberId", memberId,
+                "followerUsername", memberUsername,
                 "followMemberId", followMemberId
         ));
     }
 
-    public void publishCommentCreated(Long postId, Long commentId, Long memberId, Long targetMemberId) {
+    public void publishDmSent(Long senderId, String senderUsername, Long receiverId) {
+        publish("dm.sent", Map.of(
+                "senderId", senderId,
+                "senderUsername", senderUsername,
+                "receiverId", receiverId
+        ));
+    }
+
+    public void publishCommentCreated(Long postId, Long commentId, Long memberId, String memberUsername, Long targetMemberId) {
         publish("comment.created", Map.of(
                 "postId", postId,
                 "commentId", commentId,
                 "memberId", memberId,
+                "commenterUsername", memberUsername,
                 "targetMemberId", targetMemberId
         ));
     }
