@@ -79,12 +79,16 @@ public class FollowService {
 		if (memberId.equals(followMember.getId())) {
 			throw new UnfollowMyselfFailException();
 		}
-		final Follow follow = followRepository
-			.findByMemberIdAndFollowMemberId(memberId, followMember.getId())
-			.orElseThrow(UnfollowFailException::new);
-		alarmService.delete(followMember, follow);
-		followRepository.delete(follow);
-
+		final List<Follow> follows = followRepository
+			.findAllByMemberIdAndFollowMemberId(memberId, followMember.getId());
+		if (follows.isEmpty()) {
+			throw new UnfollowFailException();
+		}
+		// 중복 팔로우가 있을 경우 모두 삭제
+		for (Follow follow : follows) {
+			try { alarmService.delete(followMember, follow); } catch (Exception ignored) {}
+			followRepository.delete(follow);
+		}
 		return true;
 	}
 
@@ -96,10 +100,12 @@ public class FollowService {
 		if (memberId.equals(followMember.getId())) {
 			throw new FollowerDeleteFailException();
 		}
-		final Follow follow = followRepository
-			.findByMemberIdAndFollowMemberId(followMember.getId(), memberId)
-			.orElseThrow(FollowerDeleteFailException::new);
-		followRepository.delete(follow);
+		final List<Follow> follows = followRepository
+			.findAllByMemberIdAndFollowMemberId(followMember.getId(), memberId);
+		if (follows.isEmpty()) {
+			throw new FollowerDeleteFailException();
+		}
+		followRepository.deleteAll(follows);
 		return true;
 	}
 
