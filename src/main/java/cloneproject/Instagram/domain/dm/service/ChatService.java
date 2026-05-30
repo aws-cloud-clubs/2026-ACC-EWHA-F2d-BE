@@ -210,7 +210,7 @@ public class ChatService {
 		// EventBridge DM 알림 발행
 		roomMembers.stream()
 			.filter(r -> !r.getMember().getId().equals(sender.getId()))
-			.forEach(r -> eventBridgeService.publishDmSent(sender.getId(), sender.getUsername(), r.getMember().getId());
+			.forEach(r -> eventBridgeService.publishDmSent(sender.getId(), sender.getUsername(), r.getMember().getId()));
 	}
 
 	public void indicate(IndicateRequest request) {
@@ -272,7 +272,7 @@ public class ChatService {
 		// EventBridge DM 알림 발행 (이미지)
 		roomMembers.stream()
 			.filter(r -> !r.getMember().getId().equals(loginMember.getId()))
-			.forEach(r -> eventBridgeService.publishDmSent(loginMember.getId(), r.getMember().getId()));
+			.forEach(r -> eventBridgeService.publishDmSent(loginMember.getId(), loginMember.getUsername(), r.getMember().getId()));
 
 		return new StatusResponse(true);
 	}
